@@ -1,0 +1,57 @@
+#import libraries
+import time
+from RPIO import GPIO
+from  ftplib import FTP
+
+servo = PWM.Servo()
+
+#connect to ftp 
+iP = ''
+ftp=FTP()
+ftp.connect(str(iP), 5059)
+ftp.login('login', 'password')
+
+flickUp = 'fresh'
+flickDown = 'fresh'
+flickStop = 'fresh'
+
+while 1:
+    #open local file
+    gFile = open("out","wb")
+
+    #retrieve file on ftp and write contents to local file
+    ftp.retrbinary("RETR out.txt",gFile.write)
+
+    #close file
+    gFile.close()
+
+    #reopen the file as reading file this time and read contents to variable cont
+    gFile = open('out', 'r')
+    cont = gFile.read()
+    gFile.close()
+    
+    #moves motor up or down based on content
+    if cont == 'up' and flickUp == 'fresh':
+        servo.set_servo(18, 1600)
+        time.sleep(2)
+        servo.stop_servo(18)
+        flickUp = 'done'
+        flickDown = 'fresh'
+        flickStop = 'fresh'
+
+    elif cont == 'down' and flickDown == 'fresh':
+        servo.set_servo(18, 1400)
+        time.sleep(2)
+        servo.stop_servo(18)
+        flickUp = 'fresh'
+        flickDown = 'done'
+        flickStop = 'fresh'
+
+    #if nothing is read just do nothoing then
+    elif cont == 'stop' and flickStop == 'fresh':
+        servo.stop_servo(18)
+        flickUp = 'fresh'
+        flickDown = 'fresh'
+        flickStop = 'done'
+
+ftp.quit()
