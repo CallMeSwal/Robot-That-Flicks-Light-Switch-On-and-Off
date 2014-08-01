@@ -1,0 +1,36 @@
+import android
+import time
+
+droid = android.Android()
+
+message = ['1', '2']
+
+while 'exit' not in message[1]:
+
+   droid.ttsSpeak('Turn the lights on or off')
+
+   time.sleep(2)
+
+   message = droid.recognizeSpeech('Control the lights', None, None)
+
+   print(message[1])
+   
+   if 'on' in message[1]:
+       f = open('/sdcard/out.txt', 'w').close()
+       f = open('/sdcard/out.txt', 'w')
+       f.write('up')
+       f.flush()
+       f.close()
+    
+   elif 'off' in message[1]:
+       f = open('/sdcard/out.txt', 'w').close()
+       f = open('/sdcard/out.txt', 'w')
+       f.write('down')
+       f.flush()
+       f.close()
+   elif 'exit' in message[1]:
+       f = open('/sdcard/out.txt', 'w').close()
+       f = open('/sdcard/out.txt', 'w')
+       f.write('stop')
+       f.flush()
+       f.close()
